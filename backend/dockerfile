@@ -1,0 +1,18 @@
+# Задаем базовый образ
+FROM python3.14
+
+RUN apt -y update && \
+    apt install -y cmake && \
+    apt install -y python3-venv
+
+# Создаем рабочую директорию приложения
+WORKDIR /backend_app
+
+# Копируем requirements.txt
+COPY requirements.txt .
+
+# Устанавливаем зависимости Python
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+# Копируем исходный код
+COPY . .
