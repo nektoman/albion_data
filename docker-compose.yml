@@ -2,7 +2,7 @@ services:
   db:
     image: postgres
     volumes:
-      - /var/lib/postgresql:/var/lib/postgresql/data
+      - ./var/lib/postgresql:/var/lib/postgresql/data
     restart: always
     env_file:
       - .env
@@ -11,3 +11,16 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+
+  backend:
+    build: backend
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./backend/logs:/backend_app/logs
+    command: bash -c "flask db upgrade 
+            && gunicorn --reload --workers 4 --bind ${BACKEND_HOST}:${BACKEND_PORT}  --timeout ${BACKEND_TIMEOUT} wsgi:app"
+    depends_on:
+      db:
+        condition: service_healthy

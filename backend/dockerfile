@@ -1,5 +1,5 @@
 # Задаем базовый образ
-FROM python3.14
+FROM python:slim
 
 RUN apt -y update && \
     apt install -y cmake && \
