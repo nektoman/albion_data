@@ -24,3 +24,26 @@ services:
     depends_on:
       db:
         condition: service_healthy
+
+  nginx:
+    image: nginx:latest
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./nginx/templates:/etc/nginx/templates
+      - ./nginx/.htpasswd:/etc/nginx/.htpasswd
+      - /etc/cert/certbot/www:/var/www/certbot
+      - /etc/cert/certbot/letsencrypt:/etc/letsencrypt
+      - ./nginx/certbot/start.sh:/docker-entrypoint.d/999-certbot-cron.sh
+      - ./nginx/certbot/cleanup-logs.sh:/usr/local/bin/cleanup-logs.sh
+      - ./nginx/certbot/logs:/var/log/letsencrypt
+      - ./nginx/certbot/cron:/etc/cron.d/cron
+    ports:
+      - "${NGINX_PORT}:${NGINX_PORT}"
+    depends_on:
+      - backend
+
+networks:
+  main-network:
+    internal: true
