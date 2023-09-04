@@ -1,5 +1,5 @@
 from . import app
-from .controller import post_sold_daily_data
+from .controller import post_sold_daily_data, init_db
 from flask import Response, jsonify, request
 import traceback
 from .CONST import ResponseStatus as rs
@@ -10,6 +10,7 @@ def index():
     return "<p>Hello!</p>"
 
 
+
 @app.route('/sold_daily/marketorders.ingest', methods=['POST'])
 def sold_daily_marketorders():
     try:
@@ -17,7 +18,7 @@ def sold_daily_marketorders():
         post_sold_daily_data(request.get_json())
         return Response('', rs.OK_200)
     except Exception as err:
-        print(str(err) + '\n' + traceback.format_exc())
+        app.logger.info(str(err) + '\n' + traceback.format_exc())(str(err) + '\n' + traceback.format_exc())
         return Response(str(err), status=rs.INTERNAL_SERVER_ERROR_500)
 
 
@@ -28,5 +29,5 @@ def sold_daily_markethistories():
         post_sold_daily_data(request.get_json())
         return Response('', rs.OK_200)
     except Exception as err:
-        print(str(err) + '\n' + traceback.format_exc())
+        app.logger.info(str(err) + '\n' + traceback.format_exc())(str(err) + '\n' + traceback.format_exc())
         return Response(str(err), status=rs.INTERNAL_SERVER_ERROR_500)

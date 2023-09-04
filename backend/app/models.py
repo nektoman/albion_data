@@ -11,7 +11,9 @@ class Enchantment(db.Model):
 
 class Quality(db.Model):
     quality_level = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.String)
+
+    def __init__(self, quality_level):
+        self.quality_level = quality_level
 
     def __repr__(self):
         return '<Quality {})>'.format(self.text)
@@ -26,8 +28,8 @@ class Location(db.Model):
 
 
 class Item(db.Model):
-    albion_id = db.Column(db.Integer, primary_key=True)
-    item_type_id = db.Column(db.String)
+    item_type_id = db.Column(db.String, primary_key=True)
+    albion_id = db.Column(db.Integer)
 
     def __repr__(self):
         return '<Item{})>'.format(self.item_type_id)
@@ -35,7 +37,7 @@ class Item(db.Model):
 
 class SalesByDay(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    item_type_id = db.Column(db.Integer, db.ForeignKey("item.item_type_id"))
+    item_type_id = db.Column(db.String, db.ForeignKey("item.item_type_id"))
     enchantment_level = db.Column(db.Integer, db.ForeignKey("enchantment.enchantment_level"))
     quality_level = db.Column(db.Integer, db.ForeignKey("quality.quality_level"))
     location_id = db.Column(db.Integer, db.ForeignKey("location.location_id"))
