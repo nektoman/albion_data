@@ -1,5 +1,5 @@
 from . import db
-import time
+from datetime import datetime
 
 
 class Enchantment(db.Model):
@@ -30,6 +30,8 @@ class Location(db.Model):
 class Item(db.Model):
     item_type_id = db.Column(db.String, primary_key=True)
     albion_id = db.Column(db.Integer)
+    enchantment_level = db.Column(db.Integer, db.ForeignKey("enchantment.enchantment_level"))
+    tier = db.Column(db.Integer, nullable=True)
 
     def __repr__(self):
         return '<Item{})>'.format(self.item_type_id)
@@ -38,25 +40,22 @@ class Item(db.Model):
 class SalesByDay(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     item_type_id = db.Column(db.String, db.ForeignKey("item.item_type_id"))
-    enchantment_level = db.Column(db.Integer, db.ForeignKey("enchantment.enchantment_level"))
     quality_level = db.Column(db.Integer, db.ForeignKey("quality.quality_level"))
     location_id = db.Column(db.Integer, db.ForeignKey("location.location_id"))
     price = db.Column(db.Integer)
     sold = db.Column(db.Integer)
-    sold_date = db.Column(db.Float, nullable=False)
-    update_date = db.Column(db.Float, nullable=False)
-    tier = db.Column(db.Integer, nullable=True)
+    sold_date = db.Column(db.Date, nullable=False)
+    update_date = db.Column(db.Date, nullable=False)
 
-    def __init__(self, item_type_id, enchantment_level, quality_level, location_id, price, sold, sold_date, tier=None):
+    def __init__(self, item_type_id, quality_level, location_id, price, sold, sold_date):
         self.item_type_id = item_type_id
-        self.enchantment_level = enchantment_level
         self.quality_level = quality_level
         self.location_id = location_id
         self.price = price
         self.sold = sold
         self.sold_date = sold_date
-        self.update_date = time.time()  # todo date
-        self.tier = tier
+        self.update_date = datetime.now().date()
+
 
     def __repr__(self):
         return f'<SalesByDay {self.id})>'
