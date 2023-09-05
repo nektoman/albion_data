@@ -1,8 +1,8 @@
 """Init migration
 
-Revision ID: ac7e7570c444
+Revision ID: d623dbed6844
 Revises: 
-Create Date: 2023-09-05 20:38:56.609947
+Create Date: 2023-09-05 21:11:17.953456
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'ac7e7570c444'
+revision = 'd623dbed6844'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -40,18 +40,17 @@ def upgrade():
     sa.PrimaryKeyConstraint('item_type_id')
     )
     op.create_table('sales_by_day',
-    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('item_type_id', sa.String(), nullable=True),
-    sa.Column('quality_level', sa.Integer(), nullable=True),
-    sa.Column('location_id', sa.Integer(), nullable=True),
+    sa.Column('item_type_id', sa.String(), nullable=False),
+    sa.Column('location_id', sa.Integer(), nullable=False),
+    sa.Column('quality_level', sa.Integer(), nullable=False),
+    sa.Column('sold_date', sa.Date(), nullable=False),
     sa.Column('price', sa.Integer(), nullable=True),
     sa.Column('sold', sa.Integer(), nullable=True),
-    sa.Column('sold_date', sa.Date(), nullable=False),
     sa.Column('update_date', sa.Date(), nullable=False),
     sa.ForeignKeyConstraint(['item_type_id'], ['item.item_type_id'], ),
     sa.ForeignKeyConstraint(['location_id'], ['location.location_id'], ),
     sa.ForeignKeyConstraint(['quality_level'], ['quality.quality_level'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('item_type_id', 'location_id', 'quality_level', 'sold_date')
     )
     # ### end Alembic commands ###
 

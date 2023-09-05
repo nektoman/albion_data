@@ -38,13 +38,13 @@ class Item(db.Model):
 
 
 class SalesByDay(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    item_type_id = db.Column(db.String, db.ForeignKey("item.item_type_id"))
-    quality_level = db.Column(db.Integer, db.ForeignKey("quality.quality_level"))
-    location_id = db.Column(db.Integer, db.ForeignKey("location.location_id"))
+    item_type_id = db.Column(db.String, db.ForeignKey("item.item_type_id"), primary_key=True)
+    location_id = db.Column(db.Integer, db.ForeignKey("location.location_id"), primary_key=True)
+    quality_level = db.Column(db.Integer, db.ForeignKey("quality.quality_level"), primary_key=True)
+    sold_date = db.Column(db.Date, nullable=False, primary_key=True)
+
     price = db.Column(db.Integer)
     sold = db.Column(db.Integer)
-    sold_date = db.Column(db.Date, nullable=False)
     update_date = db.Column(db.Date, nullable=False)
 
     def __init__(self, item_type_id, quality_level, location_id, price, sold, sold_date):
@@ -58,4 +58,4 @@ class SalesByDay(db.Model):
 
 
     def __repr__(self):
-        return f'<SalesByDay {self.id})>'
+        return f'<SalesByDay {self.item_type_id})>'
